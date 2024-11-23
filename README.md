@@ -1,4 +1,3 @@
-
 # Course Tabs Plugin for Moodle
 
 ## Overview
@@ -42,7 +41,11 @@ There are two ways to install the **Course Tabs** plugin:
 
 ## Customization
 
-- The `style` directory and `style.css` file are optional. By default, the plugin include these empty files. However, users with CSS knowledge can modify the `style.css` file in the `styles` directory located directly within the plugin's directory to customize the plugin's appearance.
+- The `styles` directory and `style.css` file are optional. By default, the plugin includes these files in an empty state. Users with CSS knowledge can modify the `style.css` file in the `styles` directory located directly within the plugin's directory to customize the plugin's appearance.  
+  **Important:** Upon updating the plugin, the `style.css` file will be replaced or deleted. Be sure to back up the file before performing any updates.
+
+- Alternatively, CSS customizations can be applied directly from the theme. In Moodle's frontend, the reference class for styling is `coursetabs-links`.
+
 - Use the `lang` directory to add or update language support for the plugin.
 
 ## Licensing
