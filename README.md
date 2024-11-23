@@ -42,7 +42,7 @@ There are two ways to install the **Course Tabs** plugin:
 
 ## Customization
 
-- The `styles` directory and `style.css` file are optional. By default, the plugin does not include these files. However, users with CSS knowledge can create a `style.css` file in the `styles` directory to customize the plugin's appearance according to their theme.
+- The `style` directory and `style.css` file are optional. By default, the plugin include these empty files. However, users with CSS knowledge can modify the `style.css` file in the `styles` directory located directly within the plugin's directory to customize the plugin's appearance.
 - Use the `lang` directory to add or update language support for the plugin.
 
 ## Licensing
