@@ -1,0 +1,45 @@
+/*
+You can define this variables in Theme → Universe → Advancd Settings → Raw initial SCSS:
+
+:root{
+--primary-color-coursetab: inherit;
+--primary-background-coursetab: inherit;
+}
+
+*/
+:root {
+    --background-color: #fff;
+    --box-shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Stile per il container del menu */
+.coursetabs-links {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+
+    list-style-type: none !important;
+    margin: 0;
+    padding: 0;
+}
+
+/* Stile per gli elementi della lista */
+.coursetabs-links li {
+    margin: 5px 0;
+}
+
+/* Stile per i link */
+.coursetabs-links li a {
+    text-decoration: none;
+    color: var(--primary-color-coursetab);
+    padding: 8px 0;
+    display: block;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Hover e focus sugli elementi del menu */
+.coursetabs-links li a:hover,
+.coursetabs-links li a:focus {
+    background-color: var(--primary-background-coursetab);
+    color: var(--primary-color-coursetab);
+}
