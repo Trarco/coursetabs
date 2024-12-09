@@ -6,6 +6,13 @@ class block_coursetabs extends block_base
         $this->title = get_string('pluginname', 'block_coursetabs');
     }
 
+    public function specialization()
+    {
+        if (!empty($this->config->title)) {
+            $this->title = $this->config->title;
+        }
+    }
+
     public function get_content()
     {
         if ($this->content !== null) {
