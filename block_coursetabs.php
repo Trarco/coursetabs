@@ -42,8 +42,8 @@ class block_coursetabs extends block_base
 
         // Recupera i titoli delle tab dalla tabella config_plugins
         $tabtitles = [
-            'courseTabContent' => $DB->get_field('config_plugins', 'value', ['plugin' => 'theme_universe', 'name' => 'titlecoursetab1']),
             'tab2' => $DB->get_field('config_plugins', 'value', ['plugin' => 'theme_universe', 'name' => 'titlecoursetab2']),
+            'courseTabContent' => $DB->get_field('config_plugins', 'value', ['plugin' => 'theme_universe', 'name' => 'titlecoursetab1']),
             'tab3' => $DB->get_field('config_plugins', 'value', ['plugin' => 'theme_universe', 'name' => 'titlecoursetab3']),
             'tab4' => $DB->get_field('config_plugins', 'value', ['plugin' => 'theme_universe', 'name' => 'titlecoursetab4']),
             'tab5' => $DB->get_field('config_plugins', 'value', ['plugin' => 'theme_universe', 'name' => 'titlecoursetab5']),
@@ -56,12 +56,42 @@ class block_coursetabs extends block_base
             }
         }
 
-        // Costruzione dei link alle tab
+        // Costruzione dei link alle tab con icone delle attività
         $links = [];
+        $activity_icons = [
+            'tab2' => '', // Attività per Tab 2
+            'courseTabContent' => 'page', // Attività per Tab 1 (contenuto del corso)
+            'tab3' => 'quiz', // Attività per Tab 3
+            'tab4' => 'glossary', // Attività per Tab 4
+            'tab5' => 'scorm', // Attività per Tab 5
+        ];
+
         foreach ($tabtitles as $tabid => $title) {
+            // Verifica se esiste un'attività associata
+            if (!empty($activity_icons[$tabid])) {
+                // Recupera l'URL dell'icona dal modulo
+                $icon_url = new moodle_url('/theme/image.php', [
+                    'theme' => $PAGE->theme->name,
+                    'component' => 'mod_' . $activity_icons[$tabid],
+                    'image' => 'icon'
+                ]);
+                $icon_html = html_writer::empty_tag('img', ['src' => $icon_url, 'alt' => '', 'class' => 'icon']);
+            } else {
+                // Icona predefinita nel caso l'attività non sia definita
+                $default_icon_url = new moodle_url('/custom/icon/arguments.png');
+                $icon_html = html_writer::empty_tag('img', [
+                    'src' => $default_icon_url,
+                    'alt' => '',
+                    'class' => 'icon'
+                ]);
+            }
+
+            // Costruisce il contenuto del link con l'icona e il titolo
+            $link_content = $icon_html . ' ' . $title;
+
             $links[] = html_writer::link(
                 new moodle_url('/course/view.php', ['id' => $courseid, 'tab' => $tabid]),
-                $title,
+                $link_content,
                 ['data-tab' => $tabid]
             );
         }
@@ -85,10 +115,11 @@ class block_coursetabs extends block_base
     public function applicable_formats()
     {
         return [
-            'course' => true,      // Mostra il blocco nelle pagine del corso
-            'mod' => true,         // Mostra il blocco nelle pagine delle attività e risorse
-            'site-index' => false, // Non mostrare nella home del sito
-            'my' => false,         // Non mostrare nella dashboard personale
+            'course-view' => true,   // Pagine principali del corso
+            'course-view-*' => true, // Qualsiasi sottopagina del corso
+            'mod' => true,           // Attività e risorse
+            'site' => false,         // Non mostrare nella home del sito
+            'my' => false            // Non mostrare nella dashboard personale
         ];
     }
 }
