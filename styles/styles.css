@@ -12,14 +12,19 @@ You can define this variables in Theme → Universe → Advanced Settings → Ra
     --box-shadow-color: rgba(0, 0, 0, 0.1);
 }
 
+.coursetabs-title {
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
 /* Stile per il container del menu */
 .coursetabs-links {
     background-color: var(--background-color);
     border: 1px solid var(--border-color);
-
     list-style-type: none !important;
     margin: 0;
     padding: 0;
+    font-size: 1.2em;
 }
 
 /* Stile per gli elementi della lista */
@@ -42,4 +47,10 @@ You can define this variables in Theme → Universe → Advanced Settings → Ra
 .coursetabs-links li a:focus {
     background-color: var(--custom-background-color);
     color: var(--custom-primary-color);
+}
+
+/*Stile per le icone*/
+.coursetabs-links .icon {
+    width: 35px;
+    height: 35px;
 }

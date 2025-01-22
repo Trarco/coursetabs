@@ -37,6 +37,8 @@ class block_coursetabs extends block_base
             return $this->content;
         }
 
+        $this->title = html_writer::tag('div', $this->title, ['class' => 'coursetabs-title']);
+
         // ID del corso corrente
         $courseid = $PAGE->course->id;
 
