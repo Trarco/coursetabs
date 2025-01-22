@@ -73,8 +73,6 @@ For questions or suggestions, contact **Marco Traina** at [marco.traina@outlook.
 
 ## Screenshots
 
-Add screenshots or a GIF here to showcase the plugin in action.
-
 ![Course Tabs](course_tabs.png)
 
 ---
