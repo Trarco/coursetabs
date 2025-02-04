@@ -64,8 +64,8 @@ class block_coursetabs extends block_base
             'tab2' => '', // Attività per Tab 2
             'courseTabContent' => 'page', // Attività per Tab 1 (contenuto del corso)
             'tab3' => 'quiz', // Attività per Tab 3
-            'tab4' => 'glossary', // Attività per Tab 4
-            'tab5' => 'scorm', // Attività per Tab 5
+            'tab4' => 'scorm', // Attività per Tab 4
+            'tab5' => 'glossary', // Attività per Tab 5
         ];
 
         foreach ($tabtitles as $tabid => $title) {
