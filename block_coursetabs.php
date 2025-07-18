@@ -19,7 +19,7 @@ class block_coursetabs extends block_base
             return $this->content;
         }
 
-        global $PAGE, $DB;
+        global $PAGE, $DB, $OUTPUT;
 
         // Costruisci il percorso del file CSS
         $css_file_path = '/blocks/' . $this->instance->blockname . '/styles/styles.css';
@@ -59,7 +59,7 @@ class block_coursetabs extends block_base
         }
 
         // Costruzione dei link alle tab con icone delle attività
-        $links = [];
+        $tabs = [];
         $activity_icons = [
             'tab2' => '', // Attività per Tab 2
             'courseTabContent' => 'page', // Attività per Tab 1 (contenuto del corso)
@@ -69,41 +69,37 @@ class block_coursetabs extends block_base
         ];
 
         foreach ($tabtitles as $tabid => $title) {
-            // Verifica se esiste un'attività associata
             if (!empty($activity_icons[$tabid])) {
-                // Recupera l'URL dell'icona dal modulo
-                $icon_url = new moodle_url('/theme/image.php', [
+                $icon = (new moodle_url('/theme/image.php', [
                     'theme' => $PAGE->theme->name,
                     'component' => 'mod_' . $activity_icons[$tabid],
                     'image' => 'icon'
-                ]);
-                $icon_html = html_writer::empty_tag('img', ['src' => $icon_url, 'alt' => '', 'class' => 'icon']);
+                ]))->out();
             } else {
-                // Icona predefinita nel caso l'attività non sia definita
-                $default_icon_url = new moodle_url('/custom/icon/arguments.png');
-                $icon_html = html_writer::empty_tag('img', [
-                    'src' => $default_icon_url,
-                    'alt' => '',
-                    'class' => 'icon'
-                ]);
+                // Percorso completo al file custom su disco
+                $customiconpath = __DIR__ . '/custom/icon/arguments.png';
+                if (file_exists($customiconpath)) {
+                    $icon = (new moodle_url('/blocks/' . $this->instance->blockname . '/custom/icon/arguments.png'))->out();
+                } else {
+                    // Icona di default di Moodle: ad esempio l'icona di un corso
+                    $icon = (new moodle_url('/theme/image.php', [
+                        'theme' => $PAGE->theme->name,
+                        'component' => 'core',
+                        'image' => 'i/course'
+                    ]))->out();
+                }
             }
 
-            // Costruisce il contenuto del link con l'icona e il titolo
-            $link_content = $icon_html . ' ' . $title;
-
-            $links[] = html_writer::link(
-                new moodle_url('/course/view.php', ['id' => $courseid, 'tab' => $tabid]),
-                $link_content,
-                ['data-tab' => $tabid]
-            );
+            $tabs[] = [
+                'tabid' => $tabid,
+                'title' => $title,
+                'icon'  => $icon,
+                'url'   => (new moodle_url('/course/view.php', ['id' => $courseid]))->out(false) . '#' . $tabid,
+            ];
         }
 
-        // Unisci i link in un elenco HTML
-        $content = html_writer::tag('ul', implode('', array_map(function ($link) {
-            return html_writer::tag('li', $link);
-        }, $links)), ['class' => 'coursetabs-links']);
+        $content = $OUTPUT->render_from_template('block_coursetabs/coursetabs', ['tabs' => $tabs]);
 
-        // Includi il file JavaScript
         $PAGE->requires->js_call_amd('block_coursetabs/tabs', 'init');
 
         // Imposta il contenuto del blocco

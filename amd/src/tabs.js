@@ -1,66 +1,74 @@
 define(["jquery"], function ($) {
-  function activateTab() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const selectedTab = urlParams.get("tab");
 
-    console.log("Selected Tab:", selectedTab); // Debug
-    if (selectedTab) {
-      // Mappa speciale per il primo link
-      const tabMapping = {
-        courseTabContent: "#tab1",
-        tab2: "#tab2",
-        tab3: "#tab3",
-        tab4: "#tab4",
-        tab5: "#tab5",
-      };
+  function showOnlyTab(tabId) {
+    // Nasconde tutti i contenuti
+    $(".tab-pane").removeClass("show active");
 
-      // Trova il target corretto
-      const dataTarget = tabMapping[selectedTab] || `#${selectedTab}`;
-      console.log("Mapped Data Target:", dataTarget); // Debug
+    // Mostra solo quello selezionato
+    $(`#${tabId}`).addClass("show active");
 
-      // Trova il link della tab corrispondente
-      const tabLink = $(`#courseTab .nav-link[data-target='${dataTarget}']`);
+    // Rimuove la classe "active" da tutti i link
+    $("#courseTab .nav-link").removeClass("active");
 
-      console.log("Tab Link Found:", tabLink); // Debug
+    // Mappatura inversa per assegnare l'active al link corretto
+    let href;
+    switch (tabId) {
+      case "tab1":
+        href = "#courseTabContent";
+        break;
+      case "tab2":
+      case "tab3":
+      case "tab4":
+      case "tab5":
+        href = `#${tabId}`;
+        break;
+      default:
+        return;
+    }
 
-      if (tabLink.length) {
-        // Simula un clic e triggera l'evento per il cambio tab
-        tabLink.tab("show"); // Per Bootstrap o librerie compatibili
+    $(`#courseTab .nav-link[href="${href}"]`).addClass("active");
+  }
 
-        console.log(`Activated tab: ${selectedTab}`);
-      } else {
-        console.error(`Tab link with data-target='${dataTarget}' not found.`);
-      }
-    } else {
-      console.warn("No tab parameter found in the URL.");
+  function getTabIdFromHash(hash) {
+    switch (hash) {
+      case "#courseTabContent":
+        return "tab1"; // tab associato al contenuto principale
+      case "#tab2":
+      case "#tab3":
+      case "#tab4":
+      case "#tab5":
+        return hash.substring(1); // 'tab2', 'tab3'...
+      default:
+        return null;
     }
   }
 
-  function waitForTabsAndActivate(interval = 1000, maxAttempts = 50) {
-    let attempts = 0;
-
-    const checkTabs = setInterval(() => {
-      const tabLinks = document.querySelectorAll("#courseTab .nav-link");
-      console.log(`Polling for tabs... Attempt: ${attempts + 1}`);
-
-      if (tabLinks.length > 0) {
-        clearInterval(checkTabs);
-        console.log("Tabs found. Activating tab...");
-        activateTab();
-      }
-
-      attempts++;
-      if (attempts >= maxAttempts) {
-        clearInterval(checkTabs);
-        console.error("Failed to find tabs after multiple attempts.");
-      }
-    }, interval);
+  function handleHashChange() {
+    const hash = window.location.hash;
+    const tabId = getTabIdFromHash(hash);
+    if (tabId && $(`#${tabId}`).length) {
+      showOnlyTab(tabId);
+    }
   }
 
   return {
     init: function () {
-      console.log("Window fully loaded. Starting polling for tabs...");
-      waitForTabsAndActivate();
+      // Attiva il tab corretto al primo caricamento
+      handleHashChange();
+
+      // Intercetta click sui link dei tab
+      $(document).on("click", '#courseTab .nav-link[href^="#"]', function (e) {
+        const hash = $(this).attr("href");
+        const tabId = getTabIdFromHash(hash);
+        if (tabId && $(`#${tabId}`).length) {
+          e.preventDefault();
+          history.replaceState(null, null, hash);
+          showOnlyTab(tabId);
+        }
+      });
+
+      // Reagisce anche al back/forward del browser
+      window.addEventListener("hashchange", handleHashChange);
     },
   };
 });

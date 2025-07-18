@@ -12,11 +12,6 @@ You can define this variables in Theme → Universe → Advanced Settings → Ra
     --box-shadow-color: rgba(0, 0, 0, 0.1);
 }
 
-.coursetabs-title {
-    font-weight: bold;
-    font-size: 1.5em;
-}
-
 /* Stile per il container del menu */
 .coursetabs-links {
     background-color: var(--background-color);
